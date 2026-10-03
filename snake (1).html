@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snake</title>
+<style>
+  :root { --bg:#f4f4f0; --fg:#1d1d1b; --snake:#2a9d5c; --food:#d94a38; box-sizing:border-box;
+    padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#161616; --fg:#eee; --snake:#3ddc84; --food:#ff6b57; } }
+  :root[data-theme="dark"] { --bg:#161616; --fg:#eee; --snake:#3ddc84; --food:#ff6b57; }
+  html, body { height:100%; margin:0; }
+  body { background:var(--bg); color:var(--fg); font-family:system-ui,sans-serif; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }
+  canvas { border:2px solid var(--fg); max-width:92vw; touch-action:none; }
+  .pad { display:grid; grid-template-columns:repeat(3,52px); gap:6px; }
+  .pad button { height:44px; font-size:18px; border:1px solid var(--fg); background:transparent; color:var(--fg); border-radius:8px; }
+</style>
+</head>
+<body>
+<div>Score: <b id="score">0</b> — arrow keys / WASD / buttons</div>
+<canvas id="game" width="400" height="400"></canvas>
+<div class="pad">
+  <span></span><button data-d="up">▲</button><span></span>
+  <button data-d="left">◀</button><button data-d="down">▼</button><button data-d="right">▶</button>
+</div>
+<script>
+const canvas = document.getElementById('game'), ctx = canvas.getContext('2d');
+const size = 20, cells = canvas.width / size;
+let snake, dir, food, score, timer;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n);
+
+function reset() {
+  snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  dir = {x:1,y:0}; score = 0; placeFood();
+  document.getElementById('score').textContent = 0;
+  clearInterval(timer); timer = setInterval(tick, 120);
+}
+function placeFood() {
+  do { food = {x:Math.floor(Math.random()*cells), y:Math.floor(Math.random()*cells)}; }
+  while (snake.some(s => s.x===food.x && s.y===food.y));
+}
+function tick() {
+  const head = {x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+  const hitWall = head.x<0 || head.y<0 || head.x>=cells || head.y>=cells;
+  if (hitWall || snake.some(s => s.x===head.x && s.y===head.y)) return reset();
+  snake.unshift(head);
+  if (head.x===food.x && head.y===food.y) {
+    score++; document.getElementById('score').textContent = score; placeFood();
+  } else snake.pop();
+  draw();
+}
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = css('--food'); ctx.fillRect(food.x*size, food.y*size, size-2, size-2);
+  ctx.fillStyle = css('--snake');
+  snake.forEach(s => ctx.fillRect(s.x*size, s.y*size, size-2, size-2));
+}
+function turn(d) {
+  const map = {up:{x:0,y:-1}, down:{x:0,y:1}, left:{x:-1,y:0}, right:{x:1,y:0}};
+  const n = map[d];
+  if (n.x !== -dir.x || n.y !== -dir.y) dir = n;
+}
+addEventListener('keydown', e => {
+  const k = {ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right'}[e.key];
+  if (k) { e.preventDefault(); turn(k); }
+});
+document.querySelectorAll('[data-d]').forEach(b => b.onclick = () => turn(b.dataset.d));
+reset();
+</script>
+</body>
+</html>
