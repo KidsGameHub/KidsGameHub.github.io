@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rock Paper Scissors for Kids – Play Free Online | KidsGameHub</title>
+<meta name="description" content="Play Rock Paper Scissors free against the computer. First to 5 wins! A simple, fun kid-friendly game with no sign-up or ads.">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="kids.css">
+<style>.opts{grid-template-columns:repeat(3,1fr)}</style>
+</head><body>
+<a class="back" href="index.html">← All games</a>
+<h1>✌️ Rock Paper Scissors</h1>
+<p class="intro">Pick rock, paper or scissors and see if you can beat the computer. Rock beats scissors, scissors beats paper, and paper beats rock. First to 5 points wins!</p>
+<div class="stats" id="stat"></div><div class="big" id="res">❔ vs ❔</div><div class="opts" id="opts"></div><div id="msg">Pick one!</div><button class="btn" id="again">New game</button>
+<script>
+const E={rock:'✊',paper:'✋',scissors:'✌️'},K=Object.keys(E),beats={rock:'scissors',paper:'rock',scissors:'paper'};
+const $=id=>document.getElementById(id),opts=$('opts'),msg=$('msg'),stat=$('stat'),res=$('res');let me,cpu,over;
+K.forEach(k=>{const b=document.createElement('button');b.className='opt';b.textContent=E[k];b.setAttribute('aria-label',k);b.onclick=()=>play(k);opts.appendChild(b);});
+function play(k){if(over)return;const c=K[Math.floor(Math.random()*3)];res.textContent=E[k]+' vs '+E[c];let m;
+ if(k===c)m='Draw!';else if(beats[k]===c){me++;m='You win this round! 🎉';}else{cpu++;m='I win this round 😄';}
+ if(me===5||cpu===5){over=true;m+=me===5?' You won the game! 🏆':' I won the game – try again!';}
+ stat.textContent='You '+me+' – '+cpu+' Computer';msg.textContent=m;}
+function start(){me=0;cpu=0;over=false;res.textContent='❔ vs ❔';msg.textContent='Pick one!';stat.textContent='You 0 – 0 Computer';}
+$('again').onclick=start;start();
+</script></body></html>
