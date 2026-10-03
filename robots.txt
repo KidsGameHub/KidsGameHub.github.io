@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kidsgamehub.github.io/sitemap.xml
