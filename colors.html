@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Color Match – Free Kids Game | KidsGameHub</title>
+<meta name="description" content="Free color game for kids. Read the color name and tap the matching color. Fun way to learn colors, no sign-up.">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="kids.css">
+</head><body>
+<a class="back" href="index.html">← All games</a>
+<h1>🎨 Color Match</h1>
+<div class="stats" id="stat"></div><div class="big" id="q"></div><div class="opts" id="opts"></div><div id="msg"></div>
+<button class="btn" id="again">Play again</button>
+<script>
+const C=[['Red','#e63946'],['Blue','#1d70f5'],['Green','#2dc653'],['Yellow','#ffd60a'],['Purple','#9b5de5'],['Orange','#ff8c00']],N=10;
+const rnd=n=>Math.floor(Math.random()*n),qEl=document.getElementById('q'),opts=document.getElementById('opts'),msg=document.getElementById('msg'),stat=document.getElementById('stat');
+let q,score,target;
+function start(){q=0;score=0;next();}
+function next(){
+ if(q===N){opts.innerHTML='';stat.textContent='';qEl.textContent='🎉 '+score+' / '+N;msg.textContent=score>=8?'Colour star!':'Good try – play again!';return;}
+ q++;stat.textContent='Round '+q+' of '+N+' · Score '+score;msg.textContent='';
+ const pool=[...C].sort(()=>Math.random()-.5).slice(0,4);target=pool[rnd(4)];
+ qEl.textContent='Tap '+target[0].toUpperCase();opts.innerHTML='';
+ pool.forEach(c=>{const k=document.createElement('button');k.className='opt';k.style.background=c[1];k.setAttribute('aria-label',c[0]);k.onclick=()=>pick(c);opts.appendChild(k);});}
+function pick(c){[...opts.children].forEach(k=>k.disabled=true);if(c===target){score++;msg.textContent='✅ Yes!';}else msg.textContent='❌ That was '+c[0];setTimeout(next,900);}
+document.getElementById('again').onclick=start;start();
+</script></body></html>

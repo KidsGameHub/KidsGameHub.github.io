@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tic-Tac-Toe – Free Kids Game | KidsGameHub</title>
+<meta name="description" content="Play Tic-Tac-Toe free against the computer. Get three in a row to win! A simple game for kids, no sign-up.">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="kids.css">
+</head><body>
+<a class="back" href="index.html">← All games</a>
+<h1>⭐ Tic-Tac-Toe 🌙</h1>
+<div class="stats" id="msg"></div>
+<div class="board" id="board" style="grid-template-columns:repeat(3,1fr)"></div>
+<button class="btn" id="again">New game</button>
+<script>
+const L=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]],ME='⭐',CPU='🌙';
+const boardEl=document.getElementById('board'),msg=document.getElementById('msg');let b,over;
+const cells=[...Array(9)].map((_,i)=>{const c=document.createElement('button');c.className='cell';c.setAttribute('aria-label','Square '+(i+1));c.onclick=()=>play(i);boardEl.appendChild(c);return c;});
+function win(){for(const[x,y,z]of L)if(b[x]&&b[x]===b[y]&&b[x]===b[z])return b[x];return b.every(Boolean)?'tie':null;}
+function paint(){cells.forEach((c,i)=>c.textContent=b[i]);}
+function finish(w){over=true;msg.textContent=w===ME?'You win! 🎉':w===CPU?'I win 🌙 Try again!':"It's a tie! 🤝";}
+function cpu(){const e=b.map((v,i)=>v?-1:i).filter(i=>i>=0);let m=null;
+ if(Math.random()>.25){for(const p of[CPU,ME]){for(const i of e){b[i]=p;const w=win();b[i]='';if(w===p&&m===null)m=i;}if(m!==null)break;}if(m===null&&!b[4])m=4;}
+ if(m===null)m=e[Math.floor(Math.random()*e.length)];
+ b[m]=CPU;paint();const w=win();if(w)finish(w);else msg.textContent='Your turn ⭐';}
+function play(i){if(over||b[i])return;b[i]=ME;paint();const w=win();if(w)return finish(w);msg.textContent='Thinking…';setTimeout(cpu,400);}
+function start(){b=Array(9).fill('');over=false;paint();msg.textContent='Your turn ⭐';}
+document.getElementById('again').onclick=start;start();
+</script></body></html>

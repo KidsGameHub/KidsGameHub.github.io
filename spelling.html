@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spelling Quiz – Free Kids Game | KidsGameHub</title>
+<meta name="description" content="Free spelling game for kids. Look at the picture and type the word. Practice simple words, no sign-up needed.">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="kids.css">
+</head><body>
+<a class="back" href="index.html">← All games</a>
+<h1>🔤 Spelling Quiz</h1>
+<div class="stats" id="stat"></div><div class="big" id="pic"></div><div class="stats" id="hint"></div>
+<input class="inp" id="inp" autocomplete="off" autocapitalize="characters" aria-label="Type the word">
+<button class="btn" id="check">Check</button><div id="msg"></div><button class="btn" id="again" style="display:none">Play again</button>
+<script>
+const W=[['🐱','CAT'],['🐶','DOG'],['☀️','SUN'],['🐟','FISH'],['🐦','BIRD'],['🌳','TREE'],['🎂','CAKE'],['⭐','STAR'],['🌙','MOON'],['🐸','FROG']];
+const $=id=>document.getElementById(id),inp=$('inp'),msg=$('msg');let list,i,score,busy;
+function start(){list=[...W].sort(()=>Math.random()-.5).slice(0,8);i=-1;score=0;$('again').style.display='none';$('check').style.display='';inp.style.display='';next();}
+function next(){i++;busy=false;msg.textContent='';
+ if(i===list.length){$('pic').textContent='🎉 '+score+' / '+list.length;$('hint').textContent='';$('stat').textContent='';inp.style.display='none';$('check').style.display='none';msg.textContent=score>=6?'Super speller!':'Good try – play again!';$('again').style.display='';return;}
+ $('stat').textContent='Word '+(i+1)+' of '+list.length+' · Score '+score;$('pic').textContent=list[i][0];$('hint').textContent='_ '.repeat(list[i][1].length).trim();inp.value='';inp.focus();}
+function check(){if(busy)return;busy=true;const w=list[i][1];if(inp.value.trim().toUpperCase()===w){score++;msg.textContent='✅ Correct!';}else msg.textContent='❌ It is '+w;setTimeout(next,1100);}
+$('check').onclick=check;inp.addEventListener('keydown',e=>{if(e.key==='Enter')check();});$('again').onclick=start;start();
+</script></body></html>

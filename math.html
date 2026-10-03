@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math Quiz – Free Kids Game | KidsGameHub</title>
+<meta name="description" content="Free math quiz for kids. Practice adding and subtracting with 10 fun questions. No sign-up needed.">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="kids.css">
+</head><body>
+<a class="back" href="index.html">← All games</a>
+<h1>➕ Math Quiz ➖</h1>
+<div class="stats" id="stat"></div><div class="big" id="q"></div><div class="opts" id="opts"></div><div id="msg"></div>
+<button class="btn" id="again">Play again</button>
+<script>
+const N=10,rnd=n=>Math.floor(Math.random()*n);
+const qEl=document.getElementById('q'),opts=document.getElementById('opts'),msg=document.getElementById('msg'),stat=document.getElementById('stat');
+let q,score,ans;
+function start(){q=0;score=0;next();}
+function next(){
+ if(q===N){opts.innerHTML='';stat.textContent='';qEl.textContent='🎉 '+score+' / '+N;msg.textContent=score>=8?'Amazing job!':score>=5?'Well done!':'Good try – play again!';return;}
+ q++;stat.textContent='Question '+q+' of '+N+' · Score '+score;msg.textContent='';
+ const add=Math.random()<.5;let a=1+rnd(10),c=1+rnd(10);if(!add&&c>a){const t=a;a=c;c=t;}
+ ans=add?a+c:a-c;qEl.textContent=a+(add?' + ':' − ')+c+' = ?';
+ const s=new Set([ans]);while(s.size<4){const o=ans+rnd(9)-4;if(o>=0)s.add(o);}
+ opts.innerHTML='';[...s].sort(()=>Math.random()-.5).forEach(o=>{const k=document.createElement('button');k.className='opt';k.textContent=o;k.onclick=()=>pick(o);opts.appendChild(k);});}
+function pick(o){[...opts.children].forEach(k=>k.disabled=true);if(o===ans){score++;msg.textContent='✅ Great!';}else msg.textContent='❌ It was '+ans;setTimeout(next,900);}
+document.getElementById('again').onclick=start;start();
+</script></body></html>

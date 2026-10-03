@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whack-a-Mole – Free Kids Game | KidsGameHub</title>
+<meta name="description" content="Play Whack-a-Mole free! Tap the pop-up moles as fast as you can in 30 seconds. A fun game for kids.">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="stylesheet" href="kids.css">
+</head><body>
+<a class="back" href="index.html">← All games</a>
+<h1>🔨 Whack-a-Mole</h1>
+<div class="stats" id="stat">Press Start!</div>
+<div class="board" id="board" style="grid-template-columns:repeat(3,1fr)"></div>
+<button class="btn" id="go">Start</button>
+<script>
+const boardEl=document.getElementById('board'),stat=document.getElementById('stat'),go=document.getElementById('go');
+let score=0,t=30,cur=-1,tick,timer,live=false;
+const cells=[...Array(9)].map((_,i)=>{const c=document.createElement('button');c.className='cell';c.textContent='🕳️';c.setAttribute('aria-label','Hole '+(i+1));c.onclick=()=>hit(i);boardEl.appendChild(c);return c;});
+const show=()=>stat.textContent='Time '+t+' · Score '+score;
+function pop(){if(cur>=0)cells[cur].textContent='🕳️';let n;do{n=Math.floor(Math.random()*9);}while(n===cur);cur=n;cells[cur].textContent='🐹';}
+function hit(i){if(!live||i!==cur)return;score++;cells[i].textContent='💥';cur=-1;show();}
+function end(){live=false;clearInterval(tick);clearInterval(timer);cells.forEach(c=>c.textContent='🕳️');stat.textContent='🎉 Time up! You whacked '+score+'!';go.textContent='Play again';}
+go.onclick=()=>{clearInterval(tick);clearInterval(timer);score=0;t=30;cur=-1;live=true;show();go.textContent='Restart';tick=setInterval(pop,800);timer=setInterval(()=>{t--;show();if(t<=0)end();},1000);};
+</script></body></html>
